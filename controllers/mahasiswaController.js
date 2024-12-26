@@ -44,4 +44,32 @@ router.put('/:nim', (req, res) => {
     );
 });
 
+router.post('/', (req, res) => {
+    const { nim, nama, gender, prodi, alamat } = req.body;
+    db.query(
+        'INSERT INTO mahasiswa (nim, nama, gender, prodi, alamat) VALUES (?, ?, ?, ?, ?)',
+        [nim, nama, gender, prodi, alamat],
+        (error) => {
+            if (error) {
+                console.error('Error adding mahasiswa:', error);
+                res.status(500).json({ message: 'Internal Server Error' });
+            } else {
+                res.status(201).json({ message: 'Mahasiswa added successfully' });
+            }
+        }
+    );
+});
+
+router.delete('/:nim', (req, res) => {
+    const mahasiswaId = req.params.nim;
+    db.query('DELETE FROM mahasiswa WHERE nim = ?', [mahasiswaId], (error) => {
+        if (error) {
+            console.error('Error deleting mahasiswa:', error);
+            res.status(500).json({ message: 'Internal Server Error' });
+        } else {
+            res.json({ message: 'Mahasiswa deleted successfully' });
+        }
+    });
+});
+
 module.exports = router;
